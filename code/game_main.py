@@ -11,6 +11,11 @@ import game , stats , storms , extra , save_menu , resource , menu
 import config , startup , sound , alien_invasion , quakes
 from primitives import *
 
+try:
+    import android
+except ImportError:
+    android = None
+
 DEB_ICON = '/usr/share/pixmaps/lightyears.xpm'
 DEB_MANUAL = '/usr/share/doc/lightyears/html/index.html'
                 
@@ -35,7 +40,7 @@ def Main(data_dir):
 
     bufsize = 2048
 
-    no_sound = ( "--no-sound" in sys.argv )
+    no_sound = True #( "--no-sound" in sys.argv )
     if not no_sound:
         try:
             pygame.mixer.pre_init(22050, -16, 2, bufsize)
@@ -52,6 +57,7 @@ def Main(data_dir):
         for resolution in RESOLUTIONS:
             if resolution[:2] not in pygame.display.list_modes():
                 RESOLUTIONS.remove(resolution)
+                print "Removed resolution %s because not supported." % (resolution)
 
         
     if ( no_sound ):
@@ -61,6 +67,7 @@ def Main(data_dir):
 
     clock = pygame.time.Clock()
     screen = pygame.display.set_mode(config.cfg.resolution, flags)
+    print "Screen inited with %s and %s" % (config.cfg.resolution,flags)
     height = screen.get_rect().height
     width = screen.get_rect().width
 
@@ -80,6 +87,9 @@ def Main(data_dir):
     alien_invasion.Init_Aliens()
     quakes.Init_Quakes()
 
+    if android:
+        android.init()
+    
     quit = False
     while ( not quit ):
         if ( config.cfg.resolution != (width, height) ):
@@ -88,12 +98,14 @@ def Main(data_dir):
             # the fallback strategy is to do set_mode again.
             # But if you set the same mode, then nothing happens.
             # So:
-            screen = pygame.display.set_mode((640,480), flags)  # not the right mode
-            screen = pygame.display.set_mode(config.cfg.resolution, flags) # right mode!
+            screen = pygame.display.set_mode((800,480), flags)  # not the right mode
+            #screen = pygame.display.set_mode(config.cfg.resolution, flags) # right mode!
             height = screen.get_rect().height
             width = screen.get_rect().width
 
         quit = Main_Menu_Loop(n, clock, screen, (width, height))
+        print "Looping the main menu with %sx%s" % (width,height)
+        
 
     config.Save()
 
@@ -152,9 +164,12 @@ def Main_Menu_Loop(name, clock, screen, (width, height)):
     quit = False
     while ( not quit ):
         # Main menu
+        print "Displaying main menu"
         screen.fill((0,0,0))
         screen.blit(menu_image, (0,0))
-      
+        pygame.display.flip()
+        print "Flipped it and reversed it."
+        quit=True
         y = 5
         sz = 11
         for text in copyright:
@@ -168,11 +183,14 @@ def Main_Menu_Loop(name, clock, screen, (width, height)):
             img_r.top = y
             screen.blit(img, img_r.topleft)
             y += img_r.height
+        print "Finished text blitting"
        
         (quit, cmd) = extra.Simple_Menu_Loop(screen, current_menu,
                 (( width * 3 ) / 4, 10 + ( height / 2 )))
 
+        print "Finished simple menu loop"
         if ( current_menu == main_menu ):
+            print "Hanging out in main menu"
             if ( cmd == MENU_NEW_GAME ):
                 current_menu = difficulty_menu
 
@@ -226,6 +244,7 @@ def Main_Menu_Loop(name, clock, screen, (width, height)):
                 
                 
         elif ( cmd != None ):
+            print "No command received"
             if ( current_menu == resolution_menu ):
                 for (w, h, fs) in RESOLUTIONS:
                     if ( w == cmd ):
@@ -240,13 +259,14 @@ def Main_Menu_Loop(name, clock, screen, (width, height)):
                             (width,height), None, cmd)
 
             else: # Load menu
+                print "Hit the else in cmd = none"
                 if ( cmd >= 0 ):
                     # Start game from saved position
                     quit = game.Main_Loop(screen, clock, 
                             (width,height), cmd, None)
 
-            current_menu = main_menu 
-
+            current_menu = main_menu
+        print "Ended main menu loop"
     return True
 
 def Update_Feature(screen, menu_image):

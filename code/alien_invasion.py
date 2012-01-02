@@ -14,6 +14,10 @@ from quiet_season import Quiet_Season
 from primitives import *
 from map_items import *
 
+try:
+    import android
+except ImportError:
+    android = None
 
 
 class Alien_Season(Quiet_Season):

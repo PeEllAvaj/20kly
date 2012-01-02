@@ -57,7 +57,7 @@ def Get_Game_Version():
 
 def Main(data_dir, ignore = None):
     Check_Version()
-    import main
-    main.Main(data_dir)
+    import game_main
+    game_main.Main(data_dir)
 
 

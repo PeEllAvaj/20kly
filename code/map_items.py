@@ -14,6 +14,11 @@ from primitives import *
 from steam_model import Steam_Model
 from mail import New_Mail
 
+try:
+    import android
+except ImportError:
+    android = None
+
 class Item:
     def __init__(self, name):
         self.pos = None

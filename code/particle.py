@@ -13,6 +13,11 @@ import pygame , random , math
 import resource
 from primitives import *
 
+try:
+    import android
+except ImportError:
+    android = None
+
 
 MAX_STEAM_SIZE = 20
 MAX_STORM_SIZE = 70

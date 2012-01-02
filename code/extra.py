@@ -12,6 +12,11 @@ import pygame , sys , time , random , os
 import intersect , bresenham , resource
 from primitives import *
 
+try:
+    import android
+except ImportError:
+    android = None
+
 # The function returns (x,y), a point on the line between
 # (x1,y1) and (x2,y2), such that a / b of the line
 # is between (x,y) and (x1,y1).
@@ -106,10 +111,14 @@ def Simple_Menu_Loop(screen, current_menu, (x,y)):
     quit = False
 
     while (( cmd == None ) and not quit ):
+        print "Drawing menu"
         current_menu.Draw(screen, (x,y))
+        print "Drew to %s with %s at %sx%s" % (current_menu,screen,x,y)
         pygame.display.flip()
 
+        print "Waiting for event"
         e = pygame.event.wait()
+        print "Event selected"
         while ( e.type != NOEVENT ):
             if e.type == QUIT:
                 quit = True
@@ -121,6 +130,7 @@ def Simple_Menu_Loop(screen, current_menu, (x,y)):
                 current_menu.Key_Press(e.key)
             e = pygame.event.poll()
 
+        
         cmd = current_menu.Get_Command()
         current_menu.Select(None) # consume 
 

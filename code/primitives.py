@@ -8,6 +8,8 @@ import math
 
 from pygame.locals import *
 
+
+
 # Developers's controls:
 DEBUG = False # enables cheats
 DEBUG_UPDATES = False
@@ -87,19 +89,19 @@ PRESSURE_OK = 8.0
 PRESSURE_GOOD = 10.0
 
 # the grid:
-GRID_CENTRE = (25,25)
-GRID_SIZE = (50,50)
+GRID_CENTRE = (12,12)
+GRID_SIZE = (25,25)
 
 # misc:
 CITY_BOX_SIZE = 10
 CITY_COLOUR = (192,128,0)
 RESOLUTIONS = [
-        (800, 600, -4),
-        (960, 720, 0),
-        (1120, 840, 2),
-        (1280, 1024, 4),
-        (1440, 1080, 6),
-        (1600, 1200, 8),
+        (1280, 800, 0),
+        #(960, 720, 0),
+        #(1120, 840, 2),
+        #(1280, 1024, 4),
+        #(1440, 1080, 6),
+        #(1600, 1200, 8),
             ]
 CGISCRIPT = "http://www.jwhitham.org/cgi-bin/LYU.cgi?"
 
